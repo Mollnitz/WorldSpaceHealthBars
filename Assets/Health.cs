@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : MonoBehaviour {
-    public int currentHP;
-    public int MaxHP = 100;
+public class Health : MonoBehaviour, IBarRepresentable
+{
+    public int currentHP { get; set; }
+    public int MaxHP { get; set; }
 
     HealthBar hBar;
 
     private void Awake()
     {
-
+        MaxHP = 100;
         currentHP = MaxHP;
     }
 
