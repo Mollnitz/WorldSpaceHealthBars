@@ -17,10 +17,14 @@ public class HealthBar : MonoBehaviour {
     Image img;
     float originalImageSizeDeltaX;
 
+    float originalAnchoredPositionX;
+
     float percentage = 1f;
 
     int currentHealth;
     int maximumHealth;
+
+    public bool EnableAlignmentCorrection = true;
 
     // Use this for initialization
 	void Start () {
@@ -29,7 +33,9 @@ public class HealthBar : MonoBehaviour {
         img = GetComponent<Image>();
         originalImageSizeDeltaX = img.rectTransform.sizeDelta.x;
 
-        
+        //Not needed right now, as it is always zero, but this should prevent some future issues!
+        originalAnchoredPositionX = img.rectTransform.anchoredPosition.x;
+
         currentHealth = Barscript.currentHP;
         maximumHealth = Barscript.MaxHP;
     }
@@ -53,11 +59,21 @@ public class HealthBar : MonoBehaviour {
         
         if (percentage >= 0f)
         {
-            img.rectTransform.sizeDelta = new Vector2(originalImageSizeDeltaX * percentage, img.rectTransform.sizeDelta.y);
+            CorrectBarSize();
+
+            //Assures correct alignment
+            if (EnableAlignmentCorrection) CorrectAlignment();
         }
     }
 
+    private void CorrectBarSize()
+    {
+        img.rectTransform.sizeDelta = new Vector2(originalImageSizeDeltaX * percentage, img.rectTransform.sizeDelta.y);
+    }
 
-
+    private void CorrectAlignment()
+    {
+        img.rectTransform.anchoredPosition = new Vector3((originalAnchoredPositionX + (maximumHealth - currentHealth) * (img.rectTransform.localScale.x / 2f)), 0f);
+    }
 }
 
