@@ -3,17 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public interface IBarRepresentable
-{
-    int currentHP { get; set; }
-    int MaxHP { get; set; }
-}
-
 
 public class HealthBar : MonoBehaviour {
-    public GameObject healthScript;
-    IBarRepresentable Barscript;
-
     Image img;
     float originalImageSizeDeltaX;
 
@@ -21,40 +12,38 @@ public class HealthBar : MonoBehaviour {
 
     float percentage = 1f;
 
-    int currentHealth;
-    int maximumHealth;
+    [SerializeField] private int currentHealth = 100;
+    [SerializeField] private int maximumHealth = 100;
 
     public bool EnableAlignmentCorrection = true;
 
     // Use this for initialization
 	void Start () {
-        Barscript = healthScript.GetComponent<IBarRepresentable>();
-
         img = GetComponent<Image>();
         originalImageSizeDeltaX = img.rectTransform.sizeDelta.x;
 
         //Not needed right now, as it is always zero, but this should prevent some future issues!
         originalAnchoredPositionX = img.rectTransform.anchoredPosition.x;
-
-        currentHealth = Barscript.currentHP;
-        maximumHealth = Barscript.MaxHP;
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    public void SetHealth(int health)
     {
-        
-
+        currentHealth = Mathf.Clamp(health, 0, maximumHealth);
+        UpdateHealthBarRepresentation();
     }
 
+    public void SetMaxHealth(int maxHealth)
+    {
+        maximumHealth = maxHealth;
+        currentHealth = Mathf.Min(maxHealth, currentHealth);
+        UpdateHealthBarRepresentation();
+    }
 
     /// <summary>
     /// Updates the health bar
     /// </summary>
-    public void UpdateHealthBarRepresentation()
+    private void UpdateHealthBarRepresentation()
     {
-        currentHealth = Barscript.currentHP;
-        maximumHealth = Barscript.MaxHP;
         percentage = (float)currentHealth / (float)maximumHealth; // floatcasting to avoid integer rounding.
         
         if (percentage >= 0f)

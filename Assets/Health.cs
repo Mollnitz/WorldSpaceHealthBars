@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : MonoBehaviour, IBarRepresentable
+public class Health : MonoBehaviour
 {
     public int currentHP { get; set; }
     public int MaxHP { get; set; }
@@ -31,6 +31,6 @@ public class Health : MonoBehaviour, IBarRepresentable
     public void TakeDamage(int inputDamage = 10)
     {
         currentHP -= inputDamage;
-        hBar.UpdateHealthBarRepresentation();
+        hBar.SetHealth(currentHP);
     }
 }
